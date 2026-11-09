@@ -34,6 +34,24 @@ This baseline has no application implementation or CI/CD pipeline. The four
 original harness scripts are intentional placeholders and exit with a message
 until the project supplies an implementation.
 
+## Create your own skill
+
+Ask your agent: "Use skills-creator to turn my test-result reporting workflow
+into a reusable skill." The [skills-creator](skills/skills-creator/SKILL.md)
+helps define the trigger, inputs, output, instructions, and a practical trial.
+It is included in both Qoder and GitHub Copilot.
+
+Author project skills in `skills/<name>/SKILL.md`, then run:
+
+```sh
+node scripts/refresh-agent-assets.mjs
+node --test scripts/portability.test.mjs
+```
+
+The refresh copies project skills into both hosts and keeps their resource links
+portable. Commit the source and generated copies together when ready. It preserves
+host-only custom skills with different names.
+
 ## Maintain the bundled assets
 
 The AI4SE runtime sources and shared resources are under `vendor/ai4se-plugins/`.
