@@ -9,3 +9,4 @@ Append-only timeline of KB changes.
 | 2026-11-10 | kb.rules.commit | Git 提交规则改为 spec 级：verify 通过后一次、archive 之后一次；冲突处以 `git-commit-conventions` 为准，同步调整 `tdd-cycle`、`code-review-checklist`、`rules/README`、`_INDEX.md` | agent |
 | 2026-11-10 | kb.rules.v2 | 吸收团队 v2 规范（`class3-group2-*-20261110-v2`）中未覆盖部分：新增 `naming-conventions`、`web-coding-style`、`web-testing`、`api-contract`、`git-branching-and-pr`、`document-conventions`、`sdd-artifacts` 七条；补齐 `java-coding-style`、`java-testing`、`java-patterns`、`spec-first`、`code-review-checklist`；规则总数 24 → 31 | agent |
 | 2026-11-10 | kb.index | `_INDEX.md` 增补上述七条规则条目；`rules/README` 增加团队六条原则与两批规则表 | agent |
+| 2026-11-10 | kb.rules.consolidate | 规则目录重构为 `rules/<category>/rules.md` 单文件并全中文；`_INDEX.md` 改为每分类一行、`rules/_INDEX.md` 改为规则内锚点表；`rules/README.md` 与 `_SCHEMA.md` 中文化；修正规则总数口径为 24 条（31 是原文件数） | agent |

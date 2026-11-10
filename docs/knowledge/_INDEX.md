@@ -1,47 +1,26 @@
-# Knowledge index
+# 知识库索引
 
-Regenerate via `scripts/kb-lint.sh` once that script is implemented; until then this
-table is maintained by hand after structural changes (e.g. `/sdd:rules-govern`).
+`scripts/kb-lint.sh` 可用后由该脚本重新生成；在此之前，结构性变化后手工维护此表。
 
-| Area                | Entry                                                                        | Source                                                                                      |
-|---------------------|------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
-| architecture        | Architecture                                                                 | [architecture/README.md](architecture/README.md)                                            |
-| domain              | Domain knowledge                                                             | [domain/README.md](domain/README.md)                                                        |
-| domain/shared       | Shared domain vocabulary                                                     | [domain/shared/README.md](domain/shared/README.md)                                          |
-| external            | External systems knowledge                                                   | [external/README.md](external/README.md)                                                    |
-| interfaces          | Interfaces knowledge                                                         | [interfaces/README.md](interfaces/README.md)                                                |
-| operations          | Operations knowledge                                                         | [operations/README.md](operations/README.md)                                                |
-| rules               | Rules knowledge (authority; host projections are derived copies)             | [rules/README.md](rules/README.md)                                                          |
-| rules/_SCHEMA       | Rule schema — metadata table + required sections                             | [rules/_SCHEMA.md](rules/_SCHEMA.md)                                                        |
-| rules/_LOG          | Rules change log (append-only)                                               | [rules/_LOG.md](rules/_LOG.md)                                                              |
-| rules/architecture  | api-contract — 接口契约规则（契约先行 / 字段格式 / 版本兼容）                | [rules/architecture/api-contract.md](rules/architecture/api-contract.md)                    |
-| rules/architecture  | layer-boundaries — Respect declared layer dependency direction               | [rules/architecture/layer-boundaries.md](rules/architecture/layer-boundaries.md)            |
-| rules/architecture  | no-circular-dependency — No circular module dependencies                     | [rules/architecture/no-circular-dependency.md](rules/architecture/no-circular-dependency.md)|
-| rules/architecture  | orchestration-execution-separation — Keep orchestration free of judgments    | [rules/architecture/orchestration-execution-separation.md](rules/architecture/orchestration-execution-separation.md) |
-| rules/architecture  | java-patterns — Java Patterns (stack)                                        | [rules/architecture/java-patterns.md](rules/architecture/java-patterns.md)                  |
-| rules/documentation | Documentation rules                                                          | [rules/documentation/README.md](rules/documentation/README.md)                              |
-| rules/documentation | document-conventions — 文档命名、结构、语言与引用                            | [rules/documentation/document-conventions.md](rules/documentation/document-conventions.md)  |
-| rules/documentation | sdd-artifacts — SDD 工件目录与命名                                           | [rules/documentation/sdd-artifacts.md](rules/documentation/sdd-artifacts.md)                |
-| rules/process       | spec-first — Spec-First before production code                               | [rules/process/spec-first.md](rules/process/spec-first.md)                                  |
-| rules/process       | tdd-cycle — TDD Red / Green / Refactor 循环                                  | [rules/process/tdd-cycle.md](rules/process/tdd-cycle.md)                                    |
-| rules/process       | git-branching-and-pr — 分支、PR、换行符与回滚                                | [rules/process/git-branching-and-pr.md](rules/process/git-branching-and-pr.md)              |
-| rules/process       | git-commit-conventions — Git 提交时机（spec verify / archive）与 Commit message  | [rules/process/git-commit-conventions.md](rules/process/git-commit-conventions.md)          |
-| rules/process       | code-review-checklist — Code Review 检查清单                                 | [rules/process/code-review-checklist.md](rules/process/code-review-checklist.md)            |
-| rules/process       | java-hooks — Java Hooks (stack)                                              | [rules/process/java-hooks.md](rules/process/java-hooks.md)                                  |
-| rules/quality       | Quality rules (coding and refactoring)                                       | [rules/quality/README.md](rules/quality/README.md)                                          |
-| rules/quality       | coding-style — Coding style (language-agnostic, Critical)                    | [rules/quality/coding-style.md](rules/quality/coding-style.md)                              |
-| rules/quality       | java-coding-style — Java 编码风格（团队约定）                                | [rules/quality/java-coding-style.md](rules/quality/java-coding-style.md)                    |
-| rules/quality       | naming-conventions — 跨端命名速查与术语唯一性（团队约定）                    | [rules/quality/naming-conventions.md](rules/quality/naming-conventions.md)                  |
-| rules/quality       | web-coding-style — 前端 Web 编码风格（团队约定）                             | [rules/quality/web-coding-style.md](rules/quality/web-coding-style.md)                      |
-| rules/security      | security-baseline — Mandatory security checks                                | [rules/security/security-baseline.md](rules/security/security-baseline.md)                  |
-| rules/security      | no-hardcoded-secrets — No hardcoded secrets                                  | [rules/security/no-hardcoded-secrets.md](rules/security/no-hardcoded-secrets.md)            |
-| rules/security      | pii-scrubbing — Scrub PII from logs and model context                        | [rules/security/pii-scrubbing.md](rules/security/pii-scrubbing.md)                          |
-| rules/security      | prompt-injection-defense — Defend against prompt injection                   | [rules/security/prompt-injection-defense.md](rules/security/prompt-injection-defense.md)    |
-| rules/security      | java-security — Java Security (stack)                                        | [rules/security/java-security.md](rules/security/java-security.md)                          |
-| rules/testing       | Testing rules                                                                | [rules/testing/README.md](rules/testing/README.md)                                          |
-| rules/testing       | java-testing — JUnit 5 测试命名与结构（团队约定）                            | [rules/testing/java-testing.md](rules/testing/java-testing.md)                              |
-| rules/testing       | web-testing — 前端测试分层与写法（团队约定）                                 | [rules/testing/web-testing.md](rules/testing/web-testing.md)                                |
-| rules/modules       | Reserved for single-submodule rule overlays (empty)                          | —                                                                                           |
+规则条目指向分类文件 `rules/<category>/rules.md`，规则本身是该文件内的二级标题锚点，引用时写 `rules/<category>/rules.md#<id>`。
 
-Reference rules with `@rule:<id>` pointers (see `AGENTS.md`); do not copy rule bodies into
-this index or into host projections.
+| 区域 | 条目 | 来源 |
+|---|---|---|
+| architecture | 架构知识 | [architecture/README.md](architecture/README.md) |
+| domain | 领域知识 | [domain/README.md](domain/README.md) |
+| domain/shared | 共享领域词汇 | [domain/shared/README.md](domain/shared/README.md) |
+| external | 外部系统知识 | [external/README.md](external/README.md) |
+| interfaces | 接口知识 | [interfaces/README.md](interfaces/README.md) |
+| operations | 运维知识 | [operations/README.md](operations/README.md) |
+| rules | 规则总览（权威区；host 投影是派生副本） | [rules/README.md](rules/README.md) |
+| rules/_SCHEMA | 规则文件格式：每分类一个文件、ID 即锚点 | [rules/_SCHEMA.md](rules/_SCHEMA.md) |
+| rules/_LOG | 规则变更日志（只追加） | [rules/_LOG.md](rules/_LOG.md) |
+| rules/process | 流程规则 6 条：`spec-first`、`tdd-cycle`、`git-commit-conventions`、`git-branching-and-pr`、`code-review-checklist`、`java-hooks` | [rules/process/rules.md](rules/process/rules.md) |
+| rules/architecture | 架构规则 5 条：`api-contract`、`layer-boundaries`、`no-circular-dependency`、`orchestration-execution-separation`、`java-patterns` | [rules/architecture/rules.md](rules/architecture/rules.md) |
+| rules/quality | 质量规则 4 条：`coding-style`、`java-coding-style`、`naming-conventions`、`web-coding-style` | [rules/quality/rules.md](rules/quality/rules.md) |
+| rules/testing | 测试规则 2 条：`java-testing`、`web-testing` | [rules/testing/rules.md](rules/testing/rules.md) |
+| rules/security | 安全规则 5 条：`security-baseline`、`no-hardcoded-secrets`、`pii-scrubbing`、`prompt-injection-defense`、`java-security` | [rules/security/rules.md](rules/security/rules.md) |
+| rules/documentation | 文档规则 2 条：`document-conventions`、`sdd-artifacts` | [rules/documentation/rules.md](rules/documentation/rules.md) |
+| rules/modules | 单模块覆盖规则预留（当前为空） | — |
+
+用 `@rule:<id>` 指针引用规则（见 `AGENTS.md`）；不要把规则正文复制进本索引或 host 投影。

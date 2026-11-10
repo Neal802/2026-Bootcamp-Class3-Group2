@@ -23,3 +23,6 @@
 | 2026-11-10 | java-patterns | 追加项目持久化约定：迁移只增不改、UTC 与可注入时钟、行对象与领域对象分离、仓储接口在业务包内 | agent |
 | 2026-11-10 | spec-first | 追加 P1–P5 各阶段内容要求（in/out scope、ADDED/MODIFIED/REMOVED、任务落点与验证命令、真实输出、规则回写） | agent |
 | 2026-11-10 | code-review-checklist | 新增持久化、前端、契约三段；生产代码段补 `RoundingMode`、阈值唯一、异常表达；Stack 扩为 `java,react,typescript` | agent |
+| 2026-11-10 | rules-structure | **合并为每分类一个 `rules.md`**：删除 27 个旧文件（24 个单规则文件 + 3 个分类 README），规则正文并入 `process` / `architecture` / `quality` / `testing` / `security` / `documentation` 六个文件；正文统一中文；规则 ID 保留为二级标题以保证 `@rule:<id>` 与 `#<id>` 锚点可用；分类级新增 `规则总表`、`为什么这样定`、`全分类检查清单` 取代逐条 Metadata / Rationale | agent |
+| 2026-11-10 | _SCHEMA | 改写为本项目约定：分类单文件、ID 即锚点、总表字段与单条规则必需小节 | agent |
+| 2026-11-10 | rules-count | 修正规则总数口径：实际 24 条（process 6 / architecture 5 / quality 4 / testing 2 / security 5 / documentation 2）；此前记录的「31」是 md 文件数，不是规则条数 | agent |

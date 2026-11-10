@@ -1,18 +1,31 @@
-# Rules knowledge
+# 规则知识库（rules）
 
 规则权威区，按 MECE 分类组织。Host 侧规则文件（如 `.qoder/rules/ai4se/`）是派生副本，冲突时以本目录为准。
 
-| Category | 用途 |
-|---|---|
-| `process/` | spec-first、TDD 循环、提交规范、分支与 PR、评审清单 |
-| `architecture/` | 分层边界、无循环依赖、编排与执行分离、接口契约、Java 模式与持久化 |
-| `quality/` | 语言无关编码风格 + 栈相关编码风格（Java / Web） |
-| `testing/` | 测试命名、结构、断言与边界值（Java / Web） |
-| `security/` | 安全检查基线 |
-| `documentation/` | 文档命名与结构、SDD 工件命名 |
-| `modules/<id>/` | 单模块覆盖规则（仅在确有需要时创建） |
+**每个分类目录只有一个 `rules.md`**，规则 ID 是文件内的二级标题。格式约定见 [_SCHEMA.md](_SCHEMA.md)。
 
-元数据格式与必需章节见 [_SCHEMA.md](_SCHEMA.md)；`_INDEX.md` 由 `scripts/kb-lint.sh` 编译，`_LOG.md` 只追加。
+## 分类入口
+
+| 分类 | 文件 | 规则数 | 管什么 |
+|---|---|---|---|
+| process | [rules/process/rules.md](process/rules.md) | 6 | 规格先行、TDD 循环、提交时机与 message、分支与 PR、评审清单、Java 编辑钩子 |
+| architecture | [rules/architecture/rules.md](architecture/rules.md) | 5 | 接口契约、分层边界、无循环依赖、编排与执行分离、Java 模式与持久化 |
+| quality | [rules/quality/rules.md](quality/rules.md) | 4 | 语言无关编码风格、Java 编码风格、跨端命名、前端 Web 编码风格 |
+| testing | [rules/testing/rules.md](testing/rules.md) | 2 | Java 测试命名与结构、前端三层测试 |
+| security | [rules/security/rules.md](security/rules.md) | 5 | 安全基线、凭据、脱敏、提示注入、Java 安全做法 |
+| documentation | [rules/documentation/rules.md](documentation/rules.md) | 2 | 文档命名结构与语言、SDD 工件目录与命名 |
+| modules/&lt;id&gt; | `modules/<id>/rules.md` | — | 单模块覆盖规则，仅在确有需要时创建 |
+
+## 规则 ID 一览
+
+共 24 条。括号内是优先级。
+
+- **process** — `spec-first`(Critical)、`tdd-cycle`(Critical)、`git-commit-conventions`(Critical)、`git-branching-and-pr`(High)、`code-review-checklist`(High)、`java-hooks`(Medium)
+- **architecture** — `api-contract`(Critical)、`layer-boundaries`(High)、`no-circular-dependency`(High)、`orchestration-execution-separation`(High)、`java-patterns`(Medium)
+- **quality** — `coding-style`(Critical)、`java-coding-style`(Critical)、`naming-conventions`(High)、`web-coding-style`(High)
+- **testing** — `java-testing`(High)、`web-testing`(High)
+- **security** — `security-baseline`(Critical)、`no-hardcoded-secrets`(Critical)、`pii-scrubbing`(Critical)、`prompt-injection-defense`(Critical)、`java-security`(Critical)
+- **documentation** — `document-conventions`(Medium)、`sdd-artifacts`(High)
 
 ## 团队六条原则
 
@@ -23,32 +36,18 @@
 5. 优先保证可读，不以减少行数为目标。
 6. 契约先行。接口字段、错误码、金额单位在 `openapi.yaml` 里定稿后前后端才动手。
 
-## 团队规范的权威落点
+## 来源
 
-以下规则来自团队《Code Style Guide》（v1）与 2026-11-10 的 v2 规范拆分，是该文档在本仓库的权威落点。分两批：第一批由 v1（Java 单文档）拆出，第二批由 v2 补齐的前端、契约、Git、文档四层新增。
+规则来自团队《Code Style Guide》（v1，Java 单文档）与 2026-11-10 的 v2 规范拆分（`class3-group2-*`）。v2 与 v1 冲突之处按下列裁决：
 
-### 第一批：v1 Java 约定
-
-| 规则 | 覆盖内容 |
+| 冲突点 | 裁决 |
 |---|---|
-| [quality/java-coding-style.md](quality/java-coding-style.md) | 包与目录、命名与类名后缀、金额（`BigDecimal` / `Money.amount` / `RoundingMode` / 分与元边界）、常量与阈值唯一、计算顺序、三元与嵌套条件、异常表达、注释与 JavaDoc |
-| [testing/java-testing.md](testing/java-testing.md) | 测试类与方法命名（`in_*_out_*`）、Given / When / Then、`assertAll` 与断言第三参数、常量引用、边界值、测试命令、历史测试迁移 |
-| [process/tdd-cycle.md](process/tdd-cycle.md) | Red / Green / Refactor 循环与各阶段验证要求 |
-| [process/git-commit-conventions.md](process/git-commit-conventions.md) | spec 级提交时机（verify / archive 各一次）、`<type>(<stage>): <change-id> <description>` 格式、提交前验证 |
-| [process/code-review-checklist.md](process/code-review-checklist.md) | 生产代码、持久化、测试、前端、契约、TDD 与 Git 六段评审清单 |
+| 提交时机 | 以 `git-commit-conventions` 为准：一个 change 只在 verify 通过后、archive 之后各提交一次 |
+| Red / Green / Refactor 是否各自提交 | 不提交，只作工作纪律；v2 文档的 `<phase>: red\|green\|refactor` 不采纳 |
+| 静态检查工具 | 团队未引入 ESLint / Prettier / Checkstyle，相关要求降为「仅在仓库确实引入时启用」 |
 
-### 第二批：v2 新增层
+## 引用方式
 
-| 规则 | 覆盖内容 |
-|---|---|
-| [quality/naming-conventions.md](quality/naming-conventions.md) | 跨端命名速查、金额字段语义、术语唯一性 |
-| [quality/web-coding-style.md](quality/web-coding-style.md) | 前端目录、命名、组件、请求层、类型与状态、样式、可访问性、i18n |
-| [testing/web-testing.md](testing/web-testing.md) | 前端三层测试（纯逻辑 / 组件 / 端到端）、用例命名、语义化查询、提交前验证 |
-| [architecture/api-contract.md](architecture/api-contract.md) | 契约先行四步、路径与字段格式、Schema、状态码与错误码、版本兼容、两端同步 |
-| [architecture/java-patterns.md](architecture/java-patterns.md) | 通用 Java 模式 + 项目持久化约定（迁移只增不改、UTC 时钟、行对象与领域对象分离、仓储接口） |
-| [process/git-branching-and-pr.md](process/git-branching-and-pr.md) | 分支策略、PR 五要素与标题格式、换行符与编码、不提交内容、回滚 |
-| [process/spec-first.md](process/spec-first.md) | Spec 前置义务 + P1–P5 各阶段内容要求 |
-| [documentation/document-conventions.md](documentation/document-conventions.md) | 文件命名、目录、文档骨架、语言与术语、ORID、图表、链接、版本规则 |
-| [documentation/sdd-artifacts.md](documentation/sdd-artifacts.md) | OpenSpec 目录、capability 与 change-id 命名、决策记录、验证报告与检查点路径 |
+在评审意见、提交说明或 `AGENTS.md` 中使用 `@rule:<id>`，需要指到具体分类时用 `rules/<category>/rules.md#<id>`。不要复制规则正文，也不要在 host 投影里改规则——改权威区再重投影。
 
-引用方式：在评审意见、提交说明或 `AGENTS.md` 中使用 `@rule:<id>` 指针，不要复制规则正文。
+`_INDEX.md` 由 `scripts/kb-lint.sh` 编译；`_LOG.md` 只追加。
