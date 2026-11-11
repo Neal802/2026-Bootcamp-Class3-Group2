@@ -352,7 +352,9 @@ e2e/results.json   测试报告
 
 ### 生产代码
 
-- [ ] 包名全小写，类按特性平铺在 `training.<domain>` 下。
+- [ ] 包名全小写，Web 型项目按层放在 `staffing.<layer>` 下，不混入业务域目录。
+- [ ] 枚举与静态字典放 `constant`，Spring 装配类放 `config`；端口接口（`XxxGateway`、读取端口）与实现留在 `service`，不建空 `manager`。
+- [ ] HTTP 接口级测试放 `staffing/controller`，纯单元测试与被测类同包。
 - [ ] 类名、方法名、变量名、常量名符合 `java-coding-style`，类名后缀表达职责。
 - [ ] 金额统一 `BigDecimal` + `Money.amount`，比较用 `compareTo`。
 - [ ] 除法与按比例计算显式指定 `RoundingMode`，分与元转换只在边界层。

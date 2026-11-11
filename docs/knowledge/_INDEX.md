@@ -11,7 +11,7 @@
 | domain/shared | 共享领域词汇 | [domain/shared/README.md](domain/shared/README.md) |
 | external | 外部系统知识 | [external/README.md](external/README.md) |
 | interfaces | 接口知识 | [interfaces/README.md](interfaces/README.md) |
-| operations | 运维知识 | [operations/README.md](operations/README.md) |
+| operations | 运维知识（含前端工具链基线与构建故障排查） | [operations/README.md](operations/README.md) |
 | rules | 规则总览（权威区；host 投影是派生副本） | [rules/README.md](rules/README.md) |
 | rules/_SCHEMA | 规则文件格式：每分类一个文件、ID 即锚点 | [rules/_SCHEMA.md](rules/_SCHEMA.md) |
 | rules/_LOG | 规则变更日志（只追加） | [rules/_LOG.md](rules/_LOG.md) |

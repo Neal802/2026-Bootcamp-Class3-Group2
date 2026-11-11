@@ -70,17 +70,17 @@
 
 ### 包与目录
 
-包名全小写，根包固定 `training`，第二段是业务域。
+包名全小写，根包固定 `staffing`。Web 型项目全局按层。
 
 ```text
-src/main/java/training/<domain>/
-src/main/resources/db/migration/
-src/test/java/training/<domain>/
+backend/src/main/java/staffing/<layer>/
+backend/src/main/resources/db/migration/
+backend/src/test/java/staffing/<layer>/
 ```
 
-- **按特性平铺，不默认分层。** 类少时 `QuoteController`、`QuoteService`、`QuoteRepository` 放同一个包；分层目录只增加跳转成本。
-- 单个包超过 15 个类、出现两个以上业务域或新建 Web 型项目时，按 `training/<domain>/<layer>` 拆；层包分类、职责与依赖方向以 `@rule:package-structure` 为准，拆之前先在 PR 里说明。
-- 测试与被测类同包同名路径；迁移脚本固定在 `db/migration`。
+- **Web 型项目（Spring Boot）全局按层，不建业务域目录。** controller、service、dao、dto、model、constant、config、exception 直接平铺在 `staffing` 下；业务归属由类名与职责表达。
+- 非 Web 小项目可按特性平铺 `staffing/<feature>/`；单个包超过 15 个类或出现两个以上业务域时改按层。层包分类、职责与依赖方向以 `@rule:package-structure` 为准，整体搬移在单个 PR 内完成并说明。
+- HTTP 接口级测试（`@SpringBootTest` + MockMvc）统一放 `staffing/controller`，与被测入口同包；纯单元测试与被测类同包；迁移脚本固定在 `db/migration`。
 
 ### 命名
 
@@ -92,7 +92,7 @@ src/test/java/training/<domain>/
 | 布尔值 | 表达明确状态 | `member`、`eligibleForFreeShipping` |
 | 常量 | UPPER_SNAKE | `SHIPPING_FEE`、`FREE_SHIPPING_THRESHOLD` |
 | 金额常量后缀 | 阈值 `_THRESHOLD`、固定收费 `_FEE`、减免额 `_OFF`、券面额 `_FACE` | `PROMOTION_OFF`、`VOUCHER_FACE` |
-| 包名 | 全小写 | `training.quote` |
+| 包名 | 全小写 | `staffing.service` |
 | 数据库表与列 | snake_case，表名用复数 | `quotes`、`amount_cents`、`created_at` |
 | 迁移脚本 | `V<序号>__<动词_名词>.sql` | `V1__create_quotes.sql` |
 | 配置键 | 小写点分 | `spring.datasource.url` |
@@ -375,6 +375,7 @@ frontend/
   src/
     api.ts              请求层，唯一出口
     types.ts            契约类型与本地视图类型
+    route.ts            应用级路由解析与跳转（纯逻辑，可单测）
     App.tsx             路由与页面骨架
     main.tsx            挂载入口
     styles.css          全局样式与变量
@@ -388,10 +389,12 @@ e2e/
 ```
 
 - 业务逻辑不写进组件。可计算、可测试的部分（状态迁移、校验、格式化）放到 `<feature>/*.ts`，组件只做取值、渲染、绑事件。
+- 应用级纯逻辑（如路由解析 `route.ts`）放 `src/` 根，与入口文件同级；属于某个业务模块的逻辑仍放 `<feature>/*.ts`。
 - 一个组件文件只导出一个组件，文件名与组件同名。
 - 路由级页面用 `XxxPage.tsx`，可复用片段用名词（`ParcelForm`、`QuoteList`）；纯逻辑模块用小驼峰文件名（`api.ts`、`boardState.ts`）。
 - 测试文件与被测模块同目录同名加后缀：`boardState.test.ts`、`ParcelForm.test.tsx`。
 - 目录的层语义（显示/请求/业务/类型）见 `@rule:package-structure`；跨特性通用工具可放可选 `utils/` 叶子，仅在确有需要时建。
+- 前端依赖版本与构建故障的排障口径以 `operations/README.md` 的「前端工具链基线」为准（Vite 8 / plugin-react 6 / vitest 5）。
 
 ### 命名
 

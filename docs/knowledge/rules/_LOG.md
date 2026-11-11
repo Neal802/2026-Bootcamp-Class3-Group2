@@ -32,3 +32,4 @@
 | 2026-11-11 | rules-count | 规则总数 24→25（architecture 5→6）；_INDEX、rules/README、knowledge/_INDEX 同步 | agent |
 | 2026-11-11 | package-structure | 参照阿里巴巴开发手册扩展为完整应用分层：分层模型映射（开放接口/Web/终端显示/Service/Manager/DAO/第三方）、Manager 可选层、DO/DTO/BO/Query/VO 概念映射（命名不改）、分层异常职责、前端目录层映射与仓库级结构；适用栈扩为 java,react,typescript。用户裁决：映射式引入、覆盖后端+前端+仓库级 | agent |
 | 2026-11-11 | web-coding-style / naming-conventions | 补层语义与领域模型概念映射指针（@rule:package-structure）；前端 utils/ 可选叶子 | agent |
+| 2026-11-11 | package-structure / java-coding-style / code-review-checklist | **布局由 `training/<domain>/<layer>` 改为 `staffing/<layer>` 全局按层**：根包 `staffing`，不建业务域目录；新增 constant（枚举/静态字典）与 config（装配）包分类、包分类表两行、依赖方向 `config → 各层（仅装配）` 与两条检查项；仓库级结构改 `backend/src/main/java/staffing/…`，示例改 `staffing.controller.*`。用户裁决：根包 staffing、全局按层、不建业务域目录 | agent |

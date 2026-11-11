@@ -180,17 +180,20 @@ Quote:
 | Manager 层 | manager（可选） | `<feature>` 内通用逻辑 / hooks | 第三方封装、通用能力下沉、DAO 组合复用 |
 | DAO 层 | dao / mapper | —（本地存储放 `<feature>`） | 数据访问、行对象 |
 | 外部接口或第三方平台 | manager 封装 | `api.ts` 统一出口 | 外部 RPC/HTTP，返回值预处理与异常转化 |
+| 配置装配 | config | — | Spring 配置类、Bean 与 Web 组件装配；无业务判断 |
+| 业务常量 | constant | — | 业务枚举、状态码、静态字典；无业务行为 |
 
 ### 分层时机
 
-- 满足任一条件即须分层：单个包超过 15 个类；出现两个以上业务域；新建 Web 型项目（Spring Boot）。其余保持按特性平铺。
-- 根包固定 `training`，第二段是业务域，分层后第三段是标准层包：`training/<domain>/<layer>/`。
-- 拆层在单个 PR 里整体搬移并在 PR 说明；同一业务域不得一半平铺一半分层。
+- 新建 Web 型项目（Spring Boot）即按层组织，无需等待阈值；非 Web 小项目可按特性平铺，单个包超过 15 个类或出现两个以上业务域时改按层。
+- 根包固定 `staffing`。Web 型项目全局按层，层包直接位于根包下：`staffing/<layer>/`；业务归属由类名与职责表达，不建业务域目录层。
+- 同一项目不得一半平铺一半分层；整体搬移在单个 PR 内完成并说明。
 
 ### 标准包分类（Java）
 
 ```text
-src/main/java/training/<domain>/
+src/main/java/staffing/
+├── Application.java  启动类，位于根包
 ├── controller/   Web 层：路由、绑定、转换、状态码入口
 ├── service/      Service 层：领域规则、编排、事务边界
 ├── manager/      Manager 层（可选）：第三方封装、通用下沉、DAO 组合
@@ -198,6 +201,8 @@ src/main/java/training/<domain>/
 ├── mapper/       MyBatis SQL 映射：接口与 XML，与 dao 二选一
 ├── model/        领域对象（BO）：业务语义，无持久化注解
 ├── dto/          边界传输对象（DTO/Query）：请求/响应/查询，与契约对齐
+├── constant/     业务枚举、状态码与静态字典常量
+├── config/       Spring 配置类与 Web 组件装配
 ├── exception/    领域异常与统一错误处理器
 ├── utils/        无状态通用工具，叶子包
 └── ui/           终端显示层：桌面或服务端模板，Web 项目不建
@@ -206,17 +211,21 @@ src/main/java/training/<domain>/
 | 包 | 放什么 | 不放什么 | 命名 |
 |---|---|---|---|
 | controller | 路由、参数绑定与校验、DTO↔领域转换、状态码映射入口 | 业务判断、直调 dao/mapper、SQL | `XxxController` |
-| service | 业务规则与编排、事务边界、领域对象组装 | HTTP 框架类型、SQL、行对象 | `XxxService` |
+| service | 业务规则与编排、事务边界、领域对象组装；读取端口与外部系统端口（`XxxGateway`）及其实现同包 | HTTP 框架类型、SQL、行对象 | `XxxService` / `XxxGateway`；实现按来源前缀 `DatabaseXxx…` / `LoggingXxx…` |
 | manager | 第三方平台封装（返回值预处理、异常转化）、缓存/中间件等通用能力、多 DAO 组合复用 | 具体业务规则（留在 service）、对 controller 直接暴露 | `XxxManager` |
 | dao | 仓储接口与实现（JPA/JDBC/内存）、行对象 | 业务规则、行对象向上泄漏 | `XxxRepository`、`DatabaseXxxRepository` / `MemoryXxxRepository`、`XxxRow` |
 | mapper | MyBatis 映射接口；XML 固定 `src/main/resources/mapper/` | 与 dao 并存、业务规则 | `XxxMapper` |
 | model | 业务语义的领域对象（record） | JPA/JSON 注解、传输对象、框架类型 | 领域名词（`Quote`） |
 | dto | 请求/响应/查询传输 record，与契约 schema 语义一一对应 | 业务方法、持久化注解、超过 2 个参数的查询用 Map | `XxxRequest` / `XxxResponse` / `XxxSummary` / `XxxQuery` |
+| constant | 业务枚举（`RoleType`、`DemandStatus`）、状态码、静态字典（`SkillCatalog`） | 业务规则、可变状态、依赖其他业务包 | 领域名词或 `XxxCatalog` |
+| config | `@Configuration` 装配类、Web 组件注册（拦截器、参数解析器） | 业务判断、数据访问逻辑 | `XxxConfig` |
 | exception | 领域异常、统一错误处理器（按契约映射状态码） | 用异常做正常分支控制 | `XxxRejected`、`XxxNotFound`、`XxxErrorHandler` |
 | utils | 无状态通用工具（如 `Money`） | 业务状态、对 service/dao/controller 等业务包的依赖 | `XxxUtils` 或通用名词（`Money`） |
 | ui | 桌面（Swing/JavaFX）视图、服务端模板渲染与模板模型 | 业务规则、直调 dao | `XxxView` / `XxxFrame` / `XxxPanel` |
 
-- manager 是可选层：有第三方平台调用、通用能力下沉或多 DAO 组合复用之一才建；否则不建，service 直连 dao，不为「齐全」建空包。
+- manager 是可选层：只有引入第三方 SDK 且需要返回值预处理、异常转化或缓存等横切能力时才建；单纯的端口接口与本地/日志桩实现留在 service（`MailGateway` / `LoggingMailGateway`），service 直连 dao，不为「齐全」建空包。
+- constant 只放枚举与静态字典；带条件判断的分类逻辑留在 service。
+- config 只做装配；不写业务判断，不直调 dao。
 - mapper 与 dao 是同一持久化层的两种实现形态，一个项目二选一：JPA/JDBC 用 dao，MyBatis 用 mapper；不得两包并存。
 - React 前端按 `web-coding-style` 放 `frontend/`，不进 Java 包；Web 项目不建 ui 包。
 - 行对象只留在 dao/mapper 内，向上跨边界必须转成 model；dto 只出现在 controller 与 service 的边界签名，不进 dao/model。
@@ -232,19 +241,22 @@ src/main/java/training/<domain>/
 | DTO | Service/Manager 向外传输的对象 | `XxxRequest` / `XxxResponse` / `XxxSummary` | dto |
 | BO | 封装业务逻辑的对象 | 领域对象（`Quote`） | model |
 | Query | 查询请求对象，超过 2 个参数禁止 Map | `XxxQuery` | dto |
+| 常量/枚举 | 业务枚举与静态字典 | `RoleType`、`SkillCatalog` | constant |
 | VO | 显示层对象 | 前端 `types.ts` 视图类型 / ui 模板模型 | frontend / ui |
 
 ### 依赖方向
 
 ```text
 ui / controller → service → manager（可选） → dao / mapper
-controller / service → dto / model
-dao / mapper → model
+controller / service → dto / model / constant
+dao / mapper → model / constant
+config → controller / service / dao（仅装配）
 各层 → exception / utils；utils 不反向依赖任何业务包
 ```
 
-- controller 不得绕过 service 直调 dao/mapper；service 不得反向依赖 controller/ui；model 不导入框架类型。
+- controller 不得绕过 service 直调 dao/mapper；service 不得反向依赖 controller/ui；model 与 constant 不导入框架类型。
 - 有 manager 层时第三方调用只走 manager；无 manager 时 service 直连 dao。
+- config 只被框架扫描与装配，业务层不反向依赖 config。
 - 分层布局下仓储接口放 dao 包，service/manager 只依赖接口不依赖实现类（依赖倒置不变，见 `java-patterns`）。
 - 跨层捷径按 `layer-boundaries` 必须有 ADR 或例外记录。
 
@@ -281,9 +293,9 @@ frontend/src/
 ```text
 <repo>/
 ├── openapi.yaml                          契约 SoT（见 api-contract）
-├── src/main/java/training/<domain>/…     Java 后端（或 backend/ 子模块）
-├── src/main/resources/db/migration/      迁移只增不改
-├── src/test/java/training/<domain>/…     测试与被测类同包
+├── backend/src/main/java/staffing/…      Java 后端（backend/ 子模块）
+├── backend/src/main/resources/db/migration/  迁移只增不改
+├── backend/src/test/java/staffing/…      测试与被测类同层包
 ├── frontend/                             React 前端（见 web-coding-style）
 ├── e2e/                                  端到端测试
 ├── docs/                                 知识库与规则权威区
@@ -293,14 +305,15 @@ frontend/src/
 
 ### 与按特性平铺的衔接
 
-- 平铺布局：仓储接口、行对象、领域对象都放业务包（见 `java-patterns`）；类职责后缀仍以本规则分类为准。
-- 触发分层后：仓储接口与行对象搬入 dao，领域对象搬入 model，边界传输对象搬入 dto，错误处理器搬入 exception，第三方封装搬入 manager。
+- 按层布局：仓储接口与行对象在 dao，领域对象在 model，边界传输对象在 dto，枚举与静态字典在 constant，错误处理器在 exception，第三方封装在 manager。
+- 非 Web 平铺布局：仓储接口、行对象、领域对象都放业务包（见 `java-patterns`）；类职责后缀仍以本规则分类为准，升级为按层时一次性搬移。
 
 ### 检查项
 
 | 检查 | 阻断点 |
 |---|---|
-| 布局（平铺/分层）是否符合触发条件，同一域是否混用布局 | pr-merge |
+| 包是否按 `staffing/<layer>` 组织，是否混入业务域目录或平铺布局 | pr-merge |
+| constant 是否只放枚举与静态字典，config 是否只做装配 | pr-merge |
 | controller 是否含业务判断或直调 dao/mapper | pr-merge |
 | 依赖方向是否自上而下，utils 是否反向依赖业务包 | pre-commit / pr-merge |
 | 行对象是否泄漏出 dao/mapper，dto 是否进入 dao/model | pr-merge |
@@ -312,7 +325,7 @@ frontend/src/
 ### 示例
 
 ```text
-推荐：training.quote.controller.QuoteController → training.quote.service.QuoteService → training.quote.dao.QuoteRepository
+推荐：staffing.controller.QuoteController → staffing.service.QuoteService → staffing.dao.QuoteRepository
 推荐：QuoteService → PaymentGatewayManager（第三方封装） → 外部支付接口
 不推荐：QuoteController 直接 new DatabaseQuoteRepository()（跨层捷径）
 不推荐：QuoteUtils 里写会员折扣等业务判断（utils 承载业务）
@@ -322,7 +335,7 @@ frontend/src/
 ### 例外
 
 - 纯计算型项目（无数据库、无 Web）不建 controller/dao/mapper/ui；桌面项目不建 controller。
-- 现有平铺代码不强制搬迁；达到分层触发条件或下次因业务变更修改该文件时收口。
+- 非 Web 平铺代码不强制搬迁；达到分层触发条件或下次因业务变更修改该文件时收口。
 
 ## no-circular-dependency
 
@@ -396,6 +409,12 @@ frontend/src/
 - 两种布局下 service 都只依赖接口，实现（`DatabaseQuoteRepository`、`MemoryQuoteRepository`）可替换。
 - 测试优先使用内存实现；确实需要验证 SQL 语义时，单独标注为集成测试。
 
+### 端口接口位置
+
+- 读取端口与外部系统端口定义在 service 包，与业务服务同层：`RosterSummaryService`（名单读取）、`MailGateway`（邮件发送）。
+- 实现按来源命名并与接口同包：`DatabaseRosterSummaryService`（数据来源）、`LoggingMailGateway`（本地日志桩），便于测试替换。
+- 只有引入第三方 SDK 且需要返回值预处理或异常转化时才建 manager 封装；端口本身不搬离 service。
+
 ### 对象与不可变
 
 - 值对象优先 `record`，字段默认 `final`；集合对外返回时做防御性拷贝。
@@ -410,6 +429,7 @@ frontend/src/
 | 时间是否存 UTC，取时间是否走可注入时钟而非 `Instant.now()` | pr-merge |
 | 领域对象是否未被标注 JPA 注解，行对象与领域对象是否分离 | pr-merge |
 | 仓储接口位置是否符合布局（平铺：业务包 / 分层：dao），实现是否可替换 | pr-merge |
+| 端口接口（`XxxGateway`、读取端口）是否在 service，实现是否按来源命名（`Database…` / `Logging…`） | pr-merge |
 
 ### 示例
 
