@@ -26,3 +26,9 @@
 | 2026-11-10 | rules-structure | **合并为每分类一个 `rules.md`**：删除 27 个旧文件（24 个单规则文件 + 3 个分类 README），规则正文并入 `process` / `architecture` / `quality` / `testing` / `security` / `documentation` 六个文件；正文统一中文；规则 ID 保留为二级标题以保证 `@rule:<id>` 与 `#<id>` 锚点可用；分类级新增 `规则总表`、`为什么这样定`、`全分类检查清单` 取代逐条 Metadata / Rationale | agent |
 | 2026-11-10 | _SCHEMA | 改写为本项目约定：分类单文件、ID 即锚点、总表字段与单条规则必需小节 | agent |
 | 2026-11-10 | rules-count | 修正规则总数口径：实际 24 条（process 6 / architecture 5 / quality 4 / testing 2 / security 5 / documentation 2）；此前记录的「31」是 md 文件数，不是规则条数 | agent |
+| 2026-11-11 | package-structure | 新增标准分层包分类：controller/service/dao/mapper/model/dto/exception/utils/ui 的职责、禁放、命名与依赖方向；分层时机（>15 类 / ≥2 域 / 新建 Web 型）与平铺衔接。用户裁决：保留平铺阈值、dao=持久化且 mapper=MyBatis 二选一、ui=Java 视图层 | agent |
+| 2026-11-11 | java-patterns | 仓储接口位置改为随布局：平铺在业务包、分层在 dao；service 始终只依赖接口；检查项同步 | agent |
+| 2026-11-11 | java-coding-style | 包与目录衔接 package-structure（新增 Web 型项目触发分层）；类名后缀与检查项引用包分类 | agent |
+| 2026-11-11 | rules-count | 规则总数 24→25（architecture 5→6）；_INDEX、rules/README、knowledge/_INDEX 同步 | agent |
+| 2026-11-11 | package-structure | 参照阿里巴巴开发手册扩展为完整应用分层：分层模型映射（开放接口/Web/终端显示/Service/Manager/DAO/第三方）、Manager 可选层、DO/DTO/BO/Query/VO 概念映射（命名不改）、分层异常职责、前端目录层映射与仓库级结构；适用栈扩为 java,react,typescript。用户裁决：映射式引入、覆盖后端+前端+仓库级 | agent |
+| 2026-11-11 | web-coding-style / naming-conventions | 补层语义与领域模型概念映射指针（@rule:package-structure）；前端 utils/ 可选叶子 | agent |

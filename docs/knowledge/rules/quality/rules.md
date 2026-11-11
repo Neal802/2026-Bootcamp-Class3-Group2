@@ -79,7 +79,7 @@ src/test/java/training/<domain>/
 ```
 
 - **按特性平铺，不默认分层。** 类少时 `QuoteController`、`QuoteService`、`QuoteRepository` 放同一个包；分层目录只增加跳转成本。
-- 单个包超过 15 个类，或出现两个以上业务域时，再按 `<domain>/<layer>` 拆，拆之前先在 PR 里说明。
+- 单个包超过 15 个类、出现两个以上业务域或新建 Web 型项目时，按 `training/<domain>/<layer>` 拆；层包分类、职责与依赖方向以 `@rule:package-structure` 为准，拆之前先在 PR 里说明。
 - 测试与被测类同包同名路径；迁移脚本固定在 `db/migration`。
 
 ### 命名
@@ -96,6 +96,8 @@ src/test/java/training/<domain>/
 | 数据库表与列 | snake_case，表名用复数 | `quotes`、`amount_cents`、`created_at` |
 | 迁移脚本 | `V<序号>__<动词_名词>.sql` | `V1__create_quotes.sql` |
 | 配置键 | 小写点分 | `spring.datasource.url` |
+
+各层包（dto/dao/mapper/exception/ui/utils 等）的类名后缀以 `@rule:package-structure` 的包分类为准，不另造后缀。
 
 ```java
 // 不推荐
@@ -288,7 +290,7 @@ private static BigDecimal calculateShipping(BigDecimal goods, boolean member) {
 | 是否消除魔法数字与嵌套三元，阈值是否使用正确的中间金额字段 | pr-merge |
 | 同一阈值是否只定义一次，测试是否引用常量 | pr-merge |
 | 命名是否表达业务含义，内部常量是否优先 `private static final`，金额常量后缀是否合规 | pr-merge |
-| 包是否按特性平铺，类名后缀是否表达职责 | pr-merge |
+| 包布局是否符合触发条件（平铺/分层），类名后缀是否表达职责且符合包分类 | pr-merge |
 | 输入非法是否抛 `IllegalArgumentException`，业务拒绝是否用专门异常类型 | pr-merge |
 | 注释是否解释业务原因，是否残留编号注释和调试代码 | pr-merge |
 
@@ -336,6 +338,8 @@ private static BigDecimal calculateShipping(BigDecimal goods, boolean member) {
 | `total` | 最终支付金额 |
 
 术语对照：`quote`（一次报价的计算结果，不用 quotation / order）、`voucher`（代金券抵扣，不用 coupon / discount）、`promotion`（满减，不用 discount）、`change`（一次规格驱动的变更单元，不用 task / ticket）。
+
+阿里手册的 DO/DTO/BO/Query/VO 是概念分类，按 `@rule:package-structure` 映射到本仓库对象；类命名仍用速查表后缀，不整体改名 XxxDO/XxxDTO。
 
 ### 检查项
 
@@ -387,6 +391,7 @@ e2e/
 - 一个组件文件只导出一个组件，文件名与组件同名。
 - 路由级页面用 `XxxPage.tsx`，可复用片段用名词（`ParcelForm`、`QuoteList`）；纯逻辑模块用小驼峰文件名（`api.ts`、`boardState.ts`）。
 - 测试文件与被测模块同目录同名加后缀：`boardState.test.ts`、`ParcelForm.test.tsx`。
+- 目录的层语义（显示/请求/业务/类型）见 `@rule:package-structure`；跨特性通用工具可放可选 `utils/` 叶子，仅在确有需要时建。
 
 ### 命名
 

@@ -9,7 +9,7 @@
 | 分类 | 文件 | 规则数 | 管什么 |
 |---|---|---|---|
 | process | [rules/process/rules.md](process/rules.md) | 6 | 规格先行、TDD 循环、提交时机与 message、分支与 PR、评审清单、Java 编辑钩子 |
-| architecture | [rules/architecture/rules.md](architecture/rules.md) | 5 | 接口契约、分层边界、无循环依赖、编排与执行分离、Java 模式与持久化 |
+| architecture | [rules/architecture/rules.md](architecture/rules.md) | 6 | 接口契约、分层边界、应用分层与包/目录分类、无循环依赖、编排与执行分离、Java 模式与持久化 |
 | quality | [rules/quality/rules.md](quality/rules.md) | 4 | 语言无关编码风格、Java 编码风格、跨端命名、前端 Web 编码风格 |
 | testing | [rules/testing/rules.md](testing/rules.md) | 2 | Java 测试命名与结构、前端三层测试 |
 | security | [rules/security/rules.md](security/rules.md) | 5 | 安全基线、凭据、脱敏、提示注入、Java 安全做法 |
@@ -18,10 +18,10 @@
 
 ## 规则 ID 一览
 
-共 24 条。括号内是优先级。
+共 25 条。括号内是优先级。
 
 - **process** — `spec-first`(Critical)、`tdd-cycle`(Critical)、`git-commit-conventions`(Critical)、`git-branching-and-pr`(High)、`code-review-checklist`(High)、`java-hooks`(Medium)
-- **architecture** — `api-contract`(Critical)、`layer-boundaries`(High)、`no-circular-dependency`(High)、`orchestration-execution-separation`(High)、`java-patterns`(Medium)
+- **architecture** — `api-contract`(Critical)、`layer-boundaries`(High)、`package-structure`(High)、`no-circular-dependency`(High)、`orchestration-execution-separation`(High)、`java-patterns`(Medium)
 - **quality** — `coding-style`(Critical)、`java-coding-style`(Critical)、`naming-conventions`(High)、`web-coding-style`(High)
 - **testing** — `java-testing`(High)、`web-testing`(High)
 - **security** — `security-baseline`(Critical)、`no-hardcoded-secrets`(Critical)、`pii-scrubbing`(Critical)、`prompt-injection-defense`(Critical)、`java-security`(Critical)
